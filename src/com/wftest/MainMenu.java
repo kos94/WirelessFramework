@@ -27,10 +27,8 @@ public class MainMenu extends Activity {
 	// Debugging
 	private static final String TAG = "Wizard Fight";
 	private static final boolean D = true;
-	// Local Bluetooth adapter
-	private BluetoothAdapter mBluetoothAdapter = null;
 	private boolean mIsUserCameWithBt;
-
+	private BtServiceInterface mBtService;
 	// Intent request codes
 	enum BtRequest {
 		BT_CREATE_GAME, BT_JOIN_GAME
@@ -50,30 +48,28 @@ public class MainMenu extends Activity {
 		
 		// send context to WifiService to read player name
 		//WifiService.setContext(getBaseContext()); //TODO uncomment maybe?
-
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		mBtService = BtServiceHolder.getInstance(); 
 		
-		if (mBluetoothAdapter == null) {
+		if (!mBtService.isBtExist()) {
 			// If the adapter is null, then Bluetooth is not supported
 			Toast.makeText(this, R.string.bt_not_available, Toast.LENGTH_LONG)
 					.show();
-			
 		} else {
 			// remember user's BT initial state
-			mIsUserCameWithBt = mBluetoothAdapter.isEnabled();
+			mIsUserCameWithBt = mBtService.isBtEnabled();
 
 			// if no player name - set as BT name
-			String bluetoothName = mBluetoothAdapter.getName();
-			if(bluetoothName != null) {
-				SharedPreferences appPrefs = PreferenceManager
-						.getDefaultSharedPreferences(getBaseContext());
-				String pName = appPrefs.getString("player_name", "");
-				if (pName.equals("")) {
-					SharedPreferences.Editor editor = appPrefs.edit();
-					editor.putString("player_name", bluetoothName);
-					editor.commit();
-				}
-			}
+			String bluetoothName = mBtService.getBtName();
+//			if(bluetoothName != null) {
+//				SharedPreferences appPrefs = PreferenceManager
+//						.getDefaultSharedPreferences(getBaseContext());
+//				String pName = appPrefs.getString("player_name", "");
+//				if (pName.equals("")) {
+//					SharedPreferences.Editor editor = appPrefs.edit();
+//					editor.putString("player_name", bluetoothName);
+//					editor.commit();
+//				}
+//			}
 		}
 
 		// volume buttons control multimedia volume
@@ -86,7 +82,7 @@ public class MainMenu extends Activity {
 	}
 
 	public void goToCreateGame(View view) {
-		if (!mBluetoothAdapter.isEnabled()) {
+		if (!mBtService.isBtEnabled()) {
 			requestBluetooth(BtRequest.BT_CREATE_GAME);
 		} else {
 			//TODO uncomment
@@ -98,7 +94,7 @@ public class MainMenu extends Activity {
 	}
 
 	public void goToJoinGame(View view) {
-		if (!mBluetoothAdapter.isEnabled()) {
+		if (!mBtService.isBtEnabled()) {
 			requestBluetooth(BtRequest.BT_JOIN_GAME);
 		} else {
 			startActivity(new Intent(this, DeviceListActivity.class));
@@ -117,9 +113,9 @@ public class MainMenu extends Activity {
 	public void exit(View view) {
 //		BluetoothService.getInstance().release();
 		// return BT state to last one in
-		if (mBluetoothAdapter != null && !mIsUserCameWithBt
-				&& mBluetoothAdapter.isEnabled()) {
-			mBluetoothAdapter.disable();
+		if (mBtService.isBtExist() && !mIsUserCameWithBt
+				&& mBtService.isBtEnabled()) {
+			mBtService.setBtEnabled(false);
 		}
 		finish();
 	}

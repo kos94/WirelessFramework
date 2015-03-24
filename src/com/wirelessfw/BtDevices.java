@@ -3,7 +3,6 @@ package com.wirelessfw;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;

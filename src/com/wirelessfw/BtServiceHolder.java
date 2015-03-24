@@ -54,12 +54,15 @@ class BluetoothService implements BtServiceInterface {
         private static final BluetoothService instance = new BluetoothService();
     }
 
+    private BluetoothService() {
+    	mAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
+    
     public static BtServiceInterface getInstance() {
     	return InstanceHolder.instance;
     }
     
     public boolean init() {
-    	mAdapter = BluetoothAdapter.getDefaultAdapter();
     	if(mAdapter == null) return false;
         mState = STATE_NONE;
         mIsServer = false;
@@ -103,7 +106,7 @@ class BluetoothService implements BtServiceInterface {
     }
     /**
      * Return the current connection state. */
-    public synchronized int getState() {
+    public synchronized int getConnectionState() {
         return mState;
     }
     /**
@@ -416,4 +419,27 @@ class BluetoothService implements BtServiceInterface {
 		}
 	}
 
+    @Override 
+    public boolean isBtExist() {
+    	return mAdapter != null;
+    }
+    
+	@Override
+	public boolean isBtEnabled() {
+		return mAdapter.isEnabled();
+	}
+	
+	@Override
+	public String getBtName() {
+		return mAdapter.getName();
+	}
+
+	@Override
+	public void setBtEnabled(boolean isEnabled) {
+		if(isEnabled) {
+			mAdapter.enable();
+		} else {
+			mAdapter.disable();
+		}
+	}
 }

@@ -11,6 +11,14 @@ public interface BtServiceInterface {
 
 	public boolean init();
 
+	public boolean isBtExist();
+	
+	public boolean isBtEnabled();
+	
+	public void setBtEnabled(boolean isEnabled);
+	
+	public String getBtName();
+	
 	public void setAsServer();
 
 	public boolean isServer();
@@ -23,7 +31,7 @@ public interface BtServiceInterface {
 
 	public void stop();
 
-	public int getState();
+	public int getConnectionState();
 
 	public void connect(String macAddress);
 }

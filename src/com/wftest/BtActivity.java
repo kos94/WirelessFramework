@@ -112,7 +112,7 @@ public class BtActivity extends Activity {
 
 	protected void sendMessage(String s) {
 		
-		if (mBtService.getState() != BtServiceInterface.STATE_CONNECTED) {
+		if (mBtService.getConnectionState() != BtServiceInterface.STATE_CONNECTED) {
 			return;
 		}
 
