@@ -58,11 +58,13 @@ class BluetoothService implements BtServiceInterface {
     	return InstanceHolder.instance;
     }
     
-    public void init() {
+    public boolean init() {
     	mAdapter = BluetoothAdapter.getDefaultAdapter();
+    	if(mAdapter == null) return false;
         mState = STATE_NONE;
         mIsServer = false;
         setHandler(null);
+        return true;
     }
     
     @Override

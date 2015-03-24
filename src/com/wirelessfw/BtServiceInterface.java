@@ -1,13 +1,6 @@
 package com.wirelessfw;
 
-import android.bluetooth.BluetoothDevice;
-
 public interface BtServiceInterface {
-	public static class BtDevice {
-		public String name;
-		public String macAddress;
-	}
-	
 	public static final int STATE_NONE = 0; // we're doing nothing
 	public static final int STATE_LISTEN = 1; // now listening for incoming
 												// connections
@@ -16,7 +9,7 @@ public interface BtServiceInterface {
 	public static final int STATE_CONNECTED = 3; // now connected to a remote
 													// device
 
-	public void init();
+	public boolean init();
 
 	public void setAsServer();
 
